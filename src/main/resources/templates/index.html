@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Gen Transaction Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<header class="bg-orange-500 text-white p-4">
+    <h1 class="text-2xl font-bold">🌟 Next Gen Transaction Control 🌟</h1>
+    <h3 class="text-lg">Manage Transactions for Your Inventory</h3>
+</header>
+
+<main class="p-6">
+    <section>
+        <!-- Display success message if present -->
+        <div th:if="${message}" class="bg-orange-100 text-orange-800 p-4 rounded mb-4 text-center">
+            ✅ <span th:text="${message}"></span>
+        </div>
+        <!-- Display error message if present -->
+        <div th:if="${error}" class="bg-red-100 text-red-800 p-4 rounded mb-4 text-center">
+            ⚠️ <span th:text="${error}"></span>
+        </div>
+
+        <!-- Display total restock and sale values -->
+        <div class="mb-4 flex space-x-4">
+            <div class="bg-orange-100 text-orange-800 p-4 rounded">
+                📦 <strong>Total Restock Value:</strong> $<span th:text="${totalRestockValue}"></span>
+            </div>
+            <div class="bg-red-100 text-red-800 p-4 rounded">
+                🛒 <strong>Total Sale Value:</strong> $<span th:text="${totalSaleValue}"></span>
+            </div>
+        </div>
+
+        <!-- Button to add a new transaction -->
+        <div class="mb-4">
+            <a th:href="@{/transactions/add}" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                ➕ Add New Transaction
+            </a>
+        </div>
+
+        <!-- Display message if no transactions exist -->
+        <div th:if="${transactions.isEmpty()}">
+            <p class="text-gray-600">📜 No transactions recorded.</p>
+        </div>
+        <!-- Display transactions in a table if they exist -->
+        <div th:unless="${transactions.isEmpty()}" class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead>
+                <tr class="bg-orange-200">
+                    <th class="px-4 py-2 border">ID</th>
+                    <th class="px-4 py-2 border">Icon</th>
+                    <th class="px-4 py-2 border">Item Name</th>
+                    <th class="px-4 py-2 border">Quantity</th>
+                    <th class="px-4 py-2 border">Price</th>
+                    <th class="px-4 py-2 border">Date</th>
+                    <th class="px-4 py-2 border">Type</th>
+                    <th class="px-4 py-2 border">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td class="px-4 py-2 border" th:text="${transaction.id}"></td>
+                    <td class="px-4 py-2 border">
+                        <span th:if="${transaction.type == 'Sale'}">🛒</span>
+                        <span th:if="${transaction.type == 'Restock'}">📦</span>
+                    </td>
+                    <td class="px-4 py-2 border" th:text="${transaction.itemName}"></td>
+                    <td class="px-4 py-2 border" th:text="${transaction.quantity}"></td>
+                    <td class="px-4 py-2 border" th:text="${transaction.price}"></td>
+                    <td class="px-4 py-2 border" th:text="${transaction.date}"></td>
+                    <td class="px-4 py-2 border" th:text="${transaction.type}"></td>
+                    <td class="px-4 py-2 border">
+                        <a th:href="@{/transactions/edit(id=${transaction.id})}" class="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600">
+                            ✏️ Edit
+                        </a>
+                        <a th:href="@{/transactions/delete(id=${transaction.id})}" onclick="return confirm('Are you sure you want to delete this transaction?')"
+                           class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                            🗑️ Delete
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-red-500 text-white p-4 text-center">
+    <p>© 2025 Next Gen Transaction Control</p>
+</footer>
+</body>
+</html>
