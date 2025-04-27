@@ -1,11 +1,11 @@
-package com.tcs.transaction_control;
+package maintenancemanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TransactionControlApplication {
+public class MaintenancemanagementApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TransactionControlApplication.class, args);
+        SpringApplication.run(MaintenancemanagementApplication.class, args);
     }
 }

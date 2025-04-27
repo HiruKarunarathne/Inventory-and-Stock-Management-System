@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maintenance Request Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 30px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    section {
+      background: #fff;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 700px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    form input, form select, form button {
+      margin: 5px 0;
+      padding: 7px;
+      font-size: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    form button {
+      background: #298711;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    form button[type="button"] {
+      background: #aaa;
+    }
+    form button:hover {
+      background: #27810f;
+    }
+    #requestsTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    #requestsTable th, #requestsTable td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    #requestsTable th {
+      background: #298711;
+      color: #fff;
+    }
+    #requestsTable td button {
+      padding: 4px 10px;
+      margin: 0 2px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    #requestsTable .edit-btn {
+      background: #ffc107;
+      color: #333;
+    }
+    #requestsTable .delete-btn {
+      background: #dc3545;
+      color: #fff;
+    }
+    #message {
+      text-align: center;
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<h1>Maintenance Request Management</h1>
+<section id="add-section">
+  <h2>Add Maintenance Request</h2>
+  <form id="addForm">
+    <input type="text" id="itemName" placeholder="Item Name" required>
+    <input type="text" id="problemDescription" placeholder="Problem Description" required>
+    <input type="date" id="requestDate" required>
+    <input type="text" id="handledBy" placeholder="Handled By" required>
+    <button type="submit">Add</button>
+  </form>
+</section>
+
+<section id="list-section">
+  <h2>All Maintenance Requests</h2>
+  <button onclick="fetchRequests(true)">Sort by Date</button>
+  <table id="requestsTable">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Item Name</th>
+      <th>Problem</th>
+      <th>Date</th>
+      <th>Handled By</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="requestsBody"></tbody>
+  </table>
+</section>
+
+<section id="update-section" style="display:none;">
+  <h2>Update Maintenance Request</h2>
+  <form id="updateForm">
+    <input type="hidden" id="updateId">
+    <input type="text" id="updateItemName" placeholder="Item Name" required>
+    <input type="text" id="updateProblemDescription" placeholder="Problem Description" required>
+    <input type="date" id="updateRequestDate" required>
+    <input type="text" id="updateHandledBy" placeholder="Handled By" required>
+    <button type="submit">Update</button>
+    <button type="button" onclick="hideUpdateForm()">Cancel</button>
+  </form>
+</section>
+
+<div id="message"></div>
+<script>
+  const API_URL = "http://localhost:8081/maintenance";
+
+  document.addEventListener("DOMContentLoaded", function() {
+    fetchRequests();
+
+    document.getElementById("addForm").onsubmit = async function(e) {
+      e.preventDefault();
+      const data = {
+        itemName: document.getElementById("itemName").value,
+        problemDescription: document.getElementById("problemDescription").value,
+        requestDate: document.getElementById("requestDate").value,
+        handledBy: document.getElementById("handledBy").value
+      };
+      const res = await fetch(`${API_URL}/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      showMessage(await res.text());
+      fetchRequests();
+      e.target.reset();
+    };
+
+    document.getElementById("updateForm").onsubmit = async function(e) {
+      e.preventDefault();
+      const id = document.getElementById("updateId").value;
+      const data = {
+        itemName: document.getElementById("updateItemName").value,
+        problemDescription: document.getElementById("updateProblemDescription").value,
+        requestDate: document.getElementById("updateRequestDate").value,
+        handledBy: document.getElementById("updateHandledBy").value
+      };
+      const res = await fetch(`${API_URL}/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      showMessage(await res.text());
+      fetchRequests();
+      hideUpdateForm();
+    };
+  });
+
+  async function fetchRequests(sorted = false) {
+    const res = await fetch(`${API_URL}/all${sorted ? "?sorted=true" : ""}`);
+    const requests = await res.json();
+    const tbody = document.getElementById("requestsBody");
+    tbody.innerHTML = "";
+    requests.forEach(req => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+                    <td>${req.requestId}</td>
+                    <td>${req.itemName}</td>
+                    <td>${req.problemDescription}</td>
+                    <td>${req.requestDate}</td>
+                    <td>${req.handledBy}</td>
+                    <td>
+                        <button class="edit-btn" onclick="showUpdateForm(${req.requestId}, '${escape(req.itemName)}', '${escape(req.problemDescription)}', '${req.requestDate}', '${escape(req.handledBy)}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteRequest(${req.requestId})">Delete</button>
+                    </td>
+                `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function showUpdateForm(id, itemName, problemDescription, requestDate, handledBy) {
+    document.getElementById("update-section").style.display = "block";
+    document.getElementById("updateId").value = id;
+    document.getElementById("updateItemName").value = unescape(itemName);
+    document.getElementById("updateProblemDescription").value = unescape(problemDescription);
+    document.getElementById("updateRequestDate").value = requestDate;
+    document.getElementById("updateHandledBy").value = unescape(handledBy);
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
+  function hideUpdateForm() {
+    document.getElementById("update-section").style.display = "none";
+  }
+
+  async function deleteRequest(id) {
+    if (!confirm("Are you sure you want to delete this request?")) return;
+    const res = await fetch(`${API_URL}/delete/${id}`, { method: "DELETE" });
+    showMessage(await res.text());
+    fetchRequests();
+  }
+
+  function showMessage(msg) {
+    const div = document.getElementById("message");
+    div.innerText = msg;
+    setTimeout(() => div.innerText = "", 3000);
+  }
+</script>
+</body>
+</html>
