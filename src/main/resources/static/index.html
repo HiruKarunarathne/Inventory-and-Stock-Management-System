@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
+    h1 { color: #333; }
+    .container { background: #fff; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; box-shadow: 0 2px 8px #ccc; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 8px 12px; border: 1px solid #ccc; text-align: left; }
+    th { background: #eee; }
+    input, button { padding: 7px; margin: 5px 0; border-radius: 4px; border: 1px solid #aaa; }
+    button { cursor: pointer; background: #007bff; color: #fff; border: none; }
+    button:hover { background: #418cdc; }
+    .actions button { margin-right: 5px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Item Management</h1>
+  <form id="itemForm">
+    <input type="text" id="id" placeholder="ID" required>
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="number" id="quantity" placeholder="Quantity" required>
+    <input type="date" id="expiryDate" placeholder="Expiry Date" required>
+    <button type="submit">Add Item</button>
+  </form>
+  <button onclick="fetchItems()">Refresh List</button>
+  <button onclick="fetchSortedItems()">Show Sorted by Expiry</button>
+  <table id="itemsTable">
+    <thead>
+    <tr>
+      <th>ID</th><th>Name</th><th>Quantity</th><th>Expiry Date</th><th>Actions</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+<script>
+  const apiBase = "http://localhost:8080/items";
+
+  document.getElementById('itemForm').onsubmit = async function(e) {
+    e.preventDefault();
+    const item = {
+      id: document.getElementById('id').value,
+      name: document.getElementById('name').value,
+      quantity: parseInt(document.getElementById('quantity').value),
+      expiryDate: document.getElementById('expiryDate').value
+    };
+    await fetch(apiBase + "/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(item)
+    });
+    fetchItems();
+    this.reset();
+  };
+
+  async function fetchItems() {
+    const res = await fetch(apiBase + "/view");
+    const items = await res.json();
+    renderItems(items);
+  }
+
+  async function fetchSortedItems() {
+    const res = await fetch(apiBase + "/sorted");
+    const items = await res.json();
+    renderItems(items);
+  }
+
+  function renderItems(items) {
+    const tbody = document.querySelector("#itemsTable tbody");
+    tbody.innerHTML = "";
+    items.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+                <td>${item.id}</td>
+                <td><input value="${item.name}" onchange="updateField('${item.id}', 'name', this.value)"></td>
+                <td><input type="number" value="${item.quantity}" onchange="updateField('${item.id}', 'quantity', this.value)"></td>
+                <td><input type="date" value="${item.expiryDate}" onchange="updateField('${item.id}', 'expiryDate', this.value)"></td>
+                <td class="actions">
+                    <button onclick="deleteItem('${item.id}')">Delete</button>
+                </td>
+            `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function deleteItem(id) {
+    await fetch(apiBase + `/delete/${id}`, { method: "DELETE" });
+    fetchItems();
+  }
+
+  async function updateField(id, field, value) {
+    // Fetch the current item
+    const res = await fetch(apiBase + "/view");
+    const items = await res.json();
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    item[field] = field === "quantity" ? parseInt(value) : value;
+    await fetch(apiBase + `/update/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(item)
+    });
+    fetchItems();
+  }
+
+  // Initial load
+  fetchItems();
+</script>
+</body>
+</html>
