@@ -1,18 +1,19 @@
-package com.tcs.transaction_control.model;
+package com.intellij.InventoryAndStockManagementSystem.model;
 
 import java.time.LocalDate;
 
-@SuppressWarnings("unused")
 public class Transaction {
-    private int id;
-    private String itemName;
-    private int quantity;
-    private double price;
-    private LocalDate date;
-    private String type;
+    private int id;           // Unique ID for each transaction
+    private String itemName;  // Name of the item involved in the transaction
+    private int quantity;     // Quantity of items sold or restocked
+    private double price;     // Total price of the transaction
+    private LocalDate date;   // Date of the transaction
+    private String type;      // Type of transaction: "Sale" or "Restock"
 
+    // Default constructor (needed for Thymeleaf forms)
     public Transaction() {}
 
+    // Constructor with all fields
     public Transaction(int id, String itemName, int quantity, double price, LocalDate date, String type) {
         this.id = id;
         this.itemName = itemName;
@@ -22,6 +23,7 @@ public class Transaction {
         this.type = type;
     }
 
+    // Getters and setters for each field
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -40,6 +42,7 @@ public class Transaction {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
+    // Format the transaction as a string for file storage (CSV format)
     @Override
     public String toString() {
         return id + "," + itemName + "," + quantity + "," + price + "," + date + "," + type;

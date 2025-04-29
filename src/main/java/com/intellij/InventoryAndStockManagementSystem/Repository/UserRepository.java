@@ -1,6 +1,6 @@
-package com.example.Inventory.Management.System.User.Repository;
+package com.intellij.InventoryAndStockManagementSystem.Repository;
 
-import com.example.Inventory.Management.System.User.Model.User;
+import com.intellij.InventoryAndStockManagementSystem.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public class UserRepository {
-
     private static final String FILE_PATH = "src/main/resources/users.txt";
 
     // Save a user to the file

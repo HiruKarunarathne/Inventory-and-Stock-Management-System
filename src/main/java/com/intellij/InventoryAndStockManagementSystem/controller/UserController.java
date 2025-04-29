@@ -1,15 +1,13 @@
-package com.example.Inventory.Management.System.User.Controller;
+package com.intellij.InventoryAndStockManagementSystem.controller;
 
-import com.example.Inventory.Management.System.User.Model.User;
-import com.example.Inventory.Management.System.User.Service.UserService;
+import com.intellij.InventoryAndStockManagementSystem.model.User;
+import com.intellij.InventoryAndStockManagementSystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-
 public class UserController {
-
     @Autowired
     private UserService userService;
 

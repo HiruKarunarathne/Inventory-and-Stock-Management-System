@@ -1,14 +1,13 @@
-package com.example.Inventory.Management.System.User.Service.impl;
+package com.intellij.InventoryAndStockManagementSystem.service.impl;
 
-import com.example.Inventory.Management.System.User.Model.User;
-import com.example.Inventory.Management.System.User.Repository.UserRepository;
-import com.example.Inventory.Management.System.User.Service.UserService;
+import com.intellij.InventoryAndStockManagementSystem.Repository.UserRepository;
+import com.intellij.InventoryAndStockManagementSystem.model.User;
+import com.intellij.InventoryAndStockManagementSystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service // tells Spring this is a service class
 public class UserServiceImpl implements UserService {
-
     @Autowired  // Spring will automatically inject the repository
     private UserRepository userRepository;
 

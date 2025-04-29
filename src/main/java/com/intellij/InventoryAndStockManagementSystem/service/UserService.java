@@ -1,6 +1,6 @@
-package com.example.Inventory.Management.System.User.Service;
+package com.intellij.InventoryAndStockManagementSystem.service;
 
-import com.example.Inventory.Management.System.User.Model.User;
+import com.intellij.InventoryAndStockManagementSystem.model.User;
 
 public interface UserService {
     User registerUser(User user);

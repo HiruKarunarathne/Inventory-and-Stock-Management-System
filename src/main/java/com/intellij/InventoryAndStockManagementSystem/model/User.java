@@ -1,4 +1,4 @@
-package com.example.Inventory.Management.System.User.Model;
+package com.intellij.InventoryAndStockManagementSystem.model;
 
 import java.io.Serializable;
 
@@ -50,4 +50,5 @@ public class User implements Serializable {
                 ", role='" + role + '\'' +
                 '}';
     }
+
 }
