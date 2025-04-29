@@ -3,7 +3,7 @@ package com.intellij.InventoryAndStockManagementSystem.service;
 import com.intellij.InventoryAndStockManagementSystem.model.MaintenanceRequest;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class MaintenanceRequestService {
     private final Stack<MaintenanceRequest> stack = new Stack<>();
     private final String filename = "maintenance.txt";
 
-    @PostConstruct
+
     public void init() {
         loadFromFile();
     }
