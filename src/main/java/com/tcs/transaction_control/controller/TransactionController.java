@@ -30,7 +30,7 @@ public class TransactionController {
         model.addAttribute("totalSaleValue", transactionService.getTotalSaleValue());
         model.addAttribute("message", message);
         model.addAttribute("error", error);
-        return "transactionindex"; // Updated to use transactionindex.html
+        return "transactionindex";
     }
 
     @GetMapping("/add")
@@ -115,7 +115,7 @@ public class TransactionController {
 @Controller
 class RootController {
     @GetMapping("/")
-    public String redirectToTransactions() {
-        return "redirect:/transactions";
+    public String showHome() {
+        return "index";
     }
 }
