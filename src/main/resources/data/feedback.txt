@@ -1,0 +1,1 @@
+[{"id":"c05a7f25-1992-417f-8246-17304916b6aa","type":"example_type","message":"This is a sample message from nipun","userId":"user123","date":"2023-05-15T14:30:00","status":"active"}]
