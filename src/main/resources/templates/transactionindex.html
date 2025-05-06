@@ -14,10 +14,10 @@
 
 <main class="p-6">
     <section>
-        <div th:if="${message}" class="bg-green-100 text-green-800 p-4 rounded mb-4 text-center">
+        <div th:if="${message != null}" class="bg-green-100 text-green-800 p-4 rounded mb-4 text-center">
             ✅ <span th:text="${message}"></span>
         </div>
-        <div th:if="${error}" class="bg-red-100 text-red-800 p-4 rounded mb-4 text-center">
+        <div th:if="${error != null}" class="bg-red-100 text-red-800 p-4 rounded mb-4 text-center">
             ⚠️ <span th:text="${error}"></span>
         </div>
 
@@ -31,7 +31,7 @@
         </div>
 
         <div class="mb-4">
-            <a th:href="@{/transactions/add}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            <a th:href="@{/transactions/add}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer">
                 ➕ Add New Transaction
             </a>
         </div>
@@ -50,7 +50,6 @@
                     <th class="px-4 py-2 border">Price</th>
                     <th class="px-4 py-2 border">Date</th>
                     <th class="px-4 py-2 border">Type</th>
-                    <th class="px-4 py-2 border">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,20 +59,11 @@
                         <span th:if="${transaction.type == 'Sale'}">🛒</span>
                         <span th:if="${transaction.type == 'Restock'}">📦</span>
                     </td>
-                    <td class="px-4 py-2 border" th:text="${transaction.itemName}"></td>
+                    <td class="px-4 py-2 border" th:text="${transaction.name}"></td>
                     <td class="px-4 py-2 border" th:text="${transaction.quantity}"></td>
                     <td class="px-4 py-2 border" th:text="${transaction.price}"></td>
                     <td class="px-4 py-2 border" th:text="${transaction.date}"></td>
                     <td class="px-4 py-2 border" th:text="${transaction.type}"></td>
-                    <td class="px-4 py-2 border">
-                        <a th:href="@{/transactions/edit(id=${transaction.id})}" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
-                            ✏️ Edit
-                        </a>
-                        <a th:href="@{/transactions/delete(id=${transaction.id})}" onclick="return confirm('Are you sure you want to delete this transaction?')"
-                           class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
-                            🗑️ Delete
-                        </a>
-                    </td>
                 </tr>
                 </tbody>
             </table>
