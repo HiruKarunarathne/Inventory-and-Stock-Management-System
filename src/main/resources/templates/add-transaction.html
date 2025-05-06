@@ -18,7 +18,7 @@
         <form th:action="@{/transactions}" th:object="${transaction}" method="post" class="bg-white p-6 rounded shadow">
             <div class="mb-4">
                 <label for="itemName" class="block text-gray-700"><strong>Item Name:</strong></label>
-                <input type="text" id="itemName" th:field="*{itemName}" required class="w-full p-2 border rounded">
+                <input type="text" id="itemName" th:field="*{name}" required class="w-full p-2 border rounded">
             </div>
             <div class="mb-4">
                 <label for="quantity" class="block text-gray-700"><strong>Quantity:</strong></label>
@@ -41,10 +41,10 @@
                 </select>
             </div>
             <div class="flex space-x-4">
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer">
                     ✅ Add Transaction
                 </button>
-                <a th:href="@{/transactions}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                <a th:href="@{/transactions}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer">
                     ❌ Cancel
                 </a>
             </div>
