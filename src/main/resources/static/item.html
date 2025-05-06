@@ -1,9 +1,9 @@
-<!-- Updated HTML File -->
+<!--2nd time Updated HTML File -->
 
 <!-- http://localhost:8080/item.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>+
+<head>
   <meta charset="UTF-8">
   <title>Item Management</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,6 @@
     }
     button { padding: 8px 16px; border-radius: 4px; border: none; background: #044c10; color: #fff; font-weight: bold; cursor: pointer; margin-right: 5px; transition: background 0.2s; }
     button:hover { background: #044c10; }
-    .actions button { margin-right: 0; }
     #message { min-height: 24px; color: #044c10; margin-bottom: 8px; font-weight: bold; }
     table { width: 100%; border-collapse: collapse; margin-top: 18px; background: #fafafa; }
     th, td { padding: 10px 12px; border: 1px solid #ccc; text-align: left; }
@@ -37,7 +36,7 @@
 <body>
 <header>
   <h1>Item Management</h1>
-  <p>Manage your inventory easily. Add, update, delete, and sort items by expiry date.</p>
+  <p>Manage your inventory easily. Add and view items.</p>
 </header>
 <main>
   <section class="container">
@@ -60,7 +59,7 @@
     <table id="itemsTable">
       <thead>
       <tr>
-        <th>ID</th><th>Name</th><th>Quantity</th><th>Expiry Date</th><th>Actions</th>
+        <th>ID</th><th>Name</th><th>Quantity</th><th>Expiry Date</th>
       </tr>
       </thead>
       <tbody></tbody>
@@ -75,7 +74,6 @@
 </footer>
 <script>
   const apiBase = "http://localhost:8080/items";
-  let editingId = null;
 
   document.getElementById('itemForm').onsubmit = async function(e) {
     e.preventDefault();
@@ -115,85 +113,21 @@
     const tbody = document.querySelector("#itemsTable tbody");
     tbody.innerHTML = "";
     items.forEach(item => {
-      const isEditing = editingId === item.id;
       const tr = document.createElement("tr");
-      if (isEditing) {
-        tr.innerHTML = `
-            <td>${item.id}</td>
-            <td><input id="edit-name" value="${item.name}"></td>
-            <td><input id="edit-quantity" type="number" value="${item.quantity}"></td>
-            <td><input id="edit-expiryDate" type="date" value="${item.expiryDate}"></td>
-            <td class="actions">
-              <button onclick="updateItem('${item.id}')">Update</button>
-              <button onclick="cancelEdit()">Cancel</button>
-            </td>
-          `;
-      } else {
-        tr.innerHTML = `
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.quantity}</td>
-            <td>${item.expiryDate}</td>
-            <td class="actions">
-              <button onclick="editItem('${item.id}')">Edit</button>
-              <button onclick="deleteItem('${item.id}')">Delete</button>
-            </td>
-          `;
-      }
+      tr.innerHTML = `
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.quantity}</td>
+        <td>${item.expiryDate}</td>
+      `;
       tbody.appendChild(tr);
     });
-  }
-
-  function editItem(id) {
-    editingId = id;
-    fetchItems();
-  }
-
-  function cancelEdit() {
-    editingId = null;
-    fetchItems();
-  }
-
-  async function updateItem(id) {
-    const name = document.getElementById('edit-name').value;
-    const quantity = parseInt(document.getElementById('edit-quantity').value);
-    const expiryDate = document.getElementById('edit-expiryDate').value;
-    // Fetch the current item
-    const res = await fetch(apiBase + "/view");
-    const items = await res.json();
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    item.name = name;
-    item.quantity = quantity;
-    item.expiryDate = expiryDate;
-    const updateRes = await fetch(apiBase + `/update/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item)
-    });
-    if (updateRes.ok) {
-      showMessage("Item updated.");
-    } else {
-      showMessage("Failed to update item.", true);
-    }
-    editingId = null;
-    fetchItems();
-  }
-
-  async function deleteItem(id) {
-    const res = await fetch(apiBase + `/delete/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      showMessage("Item deleted.");
-    } else {
-      showMessage("Failed to delete item.", true);
-    }
-    fetchItems();
   }
 
   function showMessage(msg, isError = false) {
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = msg;
-    messageDiv.style.color = isError ? "#c00" : "#008000";
+    messageDiv.style.color = isError ? "#c00" : "#044c10";
     setTimeout(() => { messageDiv.textContent = ""; }, 2000);
   }
 
