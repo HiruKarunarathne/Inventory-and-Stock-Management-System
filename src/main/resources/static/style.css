@@ -1,0 +1,204 @@
+/* --- General body styling --- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f5f5f5;
+}
+
+/* --- Headings --- */
+h1, h2 {
+    color: #333;
+}
+
+/* --- Form styling --- */
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* --- Button styling --- */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* --- Header & navbar --- */
+.main-header {
+    display: flex;
+    align-items: center;
+    background-color: #4CAF50;
+    padding: 15px 30px;
+    color: white;
+    border-radius: 0 0 8px 8px;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-icon {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* --- Dashboard layout --- */
+.dashboard-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px;
+    gap: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    margin: 30px;
+}
+
+/* Left section: text + button */
+.dashboard-text {
+    flex: 1;
+    max-width: 50%;
+}
+
+.dashboard-text h2 {
+    margin-top: 0;
+    font-size: 28px;
+}
+
+.dashboard-text p {
+    margin: 10px 0 20px;
+    font-size: 18px;
+}
+
+.dashboard-text button {
+    width: auto;
+    padding: 10px 20px;
+}
+
+/* Right section: image */
+.dashboard-image {
+    flex: 1;
+    text-align: center;
+}
+
+.dashboard-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* --- LOGIN PAGE STYLES --- */
+.login-page {
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0;
+}
+
+.login-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Left side: form & heading */
+.login-form {
+    flex: 1;
+    background-color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #4CAF50;
+}
+
+.login-form h2 {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #777;
+}
+
+.login-form input {
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.login-form a {
+    margin-top: 10px;
+    text-align: right;
+    color: #4CAF50;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+/* Right side: background image */
+.login-image-right {
+    flex: 1;
+    background-image: url('./images/stockmg.png');
+    background-size: cover;
+    background-position: center;
+    border-left: 1px solid #ddd;
+}

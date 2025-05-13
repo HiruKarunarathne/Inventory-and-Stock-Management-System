@@ -1,0 +1,14 @@
+<!-- header.html -->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="siteHeader">
+  <header class="main-header">
+    <h1>NextGen - Inventory & Stock Management System</h1>
+    <nav>
+      <ul>
+        <li><a th:href="@{/dashboard}">Dashboard</a></li>
+        <li><a th:href="@{/login}">Login</a></li>
+        <li><a th:href="@{/register}">Register</a></li>
+        <li><a th:href="@{/logout}">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
