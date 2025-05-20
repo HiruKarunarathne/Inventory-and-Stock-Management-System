@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/items")
+@CrossOrigin(origins = "*")
+
 public class ItemController {
     private final ItemService itemService = new ItemService();
 

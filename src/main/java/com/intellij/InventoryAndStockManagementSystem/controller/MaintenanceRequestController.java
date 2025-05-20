@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/maintenance")
+@CrossOrigin(origins = "*")
 public class MaintenanceRequestController {
     @Autowired
     private MaintenanceRequestService service;
