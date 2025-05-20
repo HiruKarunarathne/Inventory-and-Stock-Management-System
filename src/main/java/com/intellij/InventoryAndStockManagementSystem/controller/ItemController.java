@@ -5,11 +5,12 @@ import com.intellij.InventoryAndStockManagementSystem.service.ItemService;
 import com.intellij.InventoryAndStockManagementSystem.util.SortUtil;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
+import java.util.List;
 @RestController
 @RequestMapping("/items")
 @CrossOrigin(origins = "*")
+
 public class ItemController {
     private final ItemService itemService = new ItemService();
 
