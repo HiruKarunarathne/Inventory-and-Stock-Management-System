@@ -1,115 +1,185 @@
 package com.intellij.InventoryAndStockManagementSystem.controller;
+//
+//import com.intellij.InventoryAndStockManagementSystem.model.Transaction;
+//import com.intellij.InventoryAndStockManagementSystem.service.TransactionService;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import java.util.List;
+//
+//@Controller
+//@RequestMapping("/transactions")
+//public class TransactionController {
+//
+//    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+//
+//    @Autowired
+//    private TransactionService transactionService;
+//
+//    @GetMapping("/test")
+//    @ResponseBody
+//    public String test() {
+//        logger.info("Test endpoint accessed");
+//        return "Test endpoint working! The server is running.";
+//    }
+//
+//    @GetMapping
+//    public String listTransactions(Model model,
+//                                   @RequestParam(value = "message", required = false) String message,
+//                                   @RequestParam(value = "error", required = false) String error) {
+//        logger.info("Accessing listTransactions: message={}, error={}", message, error);
+//        if (transactionService == null) {
+//            logger.error("TransactionService is null");
+//        }
+//        List<Transaction> transactions = transactionService.getAllTransactions();
+//        model.addAttribute("transactions", transactions);
+//        model.addAttribute("totalRestockValue", transactionService.getTotalRestockValue());
+//        model.addAttribute("totalSaleValue", transactionService.getTotalSaleValue());
+//        model.addAttribute("message", message);
+//        model.addAttribute("error", error);
+//        return "transactionindex";
+//    }
+//
+//    @GetMapping("/add")
+//    public String showAddForm(Model model) {
+//        logger.info("Accessing showAddForm");
+//        model.addAttribute("transaction", new Transaction());
+//        return "add-transaction";
+//    }
+//
+//    @PostMapping
+//    public String addTransaction(@ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
+//        logger.info("Adding transaction: id={}, name={}, quantity={}, price={}, date={}, type={}",
+//                transaction.getId(), transaction.getName(), transaction.getQuantity(),
+//                transaction.getPrice(), transaction.getDate(), transaction.getType());
+//        if (transaction.getName() == null || transaction.getName().trim().isEmpty()) {
+//            logger.warn("Validation failed: Item name is required");
+//            redirectAttributes.addAttribute("error", "Item name is required!");
+//            return "redirect:/transactions";
+//        }
+//        if (transaction.getQuantity() <= 0) {
+//            logger.warn("Validation failed: Quantity must be positive");
+//            redirectAttributes.addAttribute("error", "Quantity must be positive!");
+//            return "redirect:/transactions";
+//        }
+//        if (transaction.getPrice() <= 0) {
+//            logger.warn("Validation failed: Price must be positive");
+//            redirectAttributes.addAttribute("error", "Price must be positive!");
+//            return "redirect:/transactions";
+//        }
+//        if (transaction.getDate() == null) {
+//            logger.warn("Validation failed: Date is required");
+//            redirectAttributes.addAttribute("error", "Date is required!");
+//            return "redirect:/transactions";
+//        }
+//        if (transaction.getType() == null || transaction.getType().trim().isEmpty()) {
+//            logger.warn("Validation failed: Type is required");
+//            redirectAttributes.addAttribute("error", "Type is required!");
+//            return "redirect:/transactions";
+//        }
+//        transactionService.addTransaction(transaction);
+//        logger.info("Transaction added successfully");
+//        redirectAttributes.addAttribute("message", "Transaction added successfully!");
+//        return "redirect:/transactions";
+//    }
+//}
+//
+//@Controller
+//class RootController {
+//    private static final Logger logger = LoggerFactory.getLogger(RootController.class);
+//
+//    @GetMapping("/")
+//    public String showHome() {
+//        logger.info("Accessing home page");
+//        return "index";
+//    }
+//}
+
 
 import com.intellij.InventoryAndStockManagementSystem.model.Transaction;
-
 import com.intellij.InventoryAndStockManagementSystem.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:63342") // <-- CORS fix added here
 @Controller
 @RequestMapping("/transactions")
 public class TransactionController {
-    @Autowired
-    private TransactionService transactionService; // Inject the service
 
-    // Display all transactions
-    @GetMapping
+    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+
+    @Autowired
+    private TransactionService transactionService;
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        logger.info("Test endpoint accessed");
+        return "Test endpoint working! The server is running.";
+    }
+
+    @GetMapping(produces = "application/json")
+    @ResponseBody
+    public List<Transaction> getAllTransactions() {
+        logger.info("Fetching all transactions (JSON)");
+        return transactionService.getAllTransactions();
+    }
+
+    @PostMapping(consumes = "application/json")
+    @ResponseBody
+    public ResponseEntity<String> addTransaction(@RequestBody Transaction transaction) {
+        logger.info("Adding transaction: name={}, quantity={}, price={}, date={}, type={}",
+                transaction.getName(), transaction.getQuantity(),
+                transaction.getPrice(), transaction.getDate(), transaction.getType());
+
+        if (transaction.getName() == null || transaction.getName().trim().isEmpty()) {
+            logger.warn("Validation failed: Item name is required");
+            return ResponseEntity.badRequest().body("Item name is required!");
+        }
+        if (transaction.getQuantity() <= 0) {
+            logger.warn("Validation failed: Quantity must be positive");
+            return ResponseEntity.badRequest().body("Quantity must be positive!");
+        }
+        if (transaction.getPrice() <= 0) {
+            logger.warn("Validation failed: Price must be positive");
+            return ResponseEntity.badRequest().body("Price must be positive!");
+        }
+        if (transaction.getDate() == null) {
+            logger.warn("Validation failed: Date is required");
+            return ResponseEntity.badRequest().body("Date is required!");
+        }
+        if (transaction.getType() == null || transaction.getType().trim().isEmpty()) {
+            logger.warn("Validation failed: Type is required");
+            return ResponseEntity.badRequest().body("Type is required!");
+        }
+
+        transactionService.addTransaction(transaction);
+        logger.info("Transaction added successfully");
+        return ResponseEntity.ok("Transaction added successfully!");
+    }
+
+    @GetMapping("/view")
     public String listTransactions(Model model,
                                    @RequestParam(value = "message", required = false) String message,
                                    @RequestParam(value = "error", required = false) String error) {
-        model.addAttribute("transactions", transactionService.getAllTransactions()); // Add transactions to the model
-        model.addAttribute("totalRestockValue", transactionService.getTotalRestockValue()); // Add total restock value
-        model.addAttribute("totalSaleValue", transactionService.getTotalSaleValue()); // Add total sale value
-        model.addAttribute("message", message); // Success message (if any)
-        model.addAttribute("error", error); // Error message (if any)
-        return "transactionindex"; // Return the transactionindex.html template
-    }
-
-    // Show form to add a new transaction
-    @GetMapping("/add")
-    public String showAddForm(Model model) {
-        model.addAttribute("transaction", new Transaction()); // Create a new Transaction object for the form
-        return "add-transaction"; // Return the add-transaction.html template
-    }
-
-    // Handle form submission to add a new transaction
-    @PostMapping
-    public String addTransaction(@ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
-        // Validate the transaction
-        if (transaction.getItemName() == null || transaction.getItemName().trim().isEmpty()) {
-            redirectAttributes.addAttribute("error", "Item name is required!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getQuantity() <= 0) {
-            redirectAttributes.addAttribute("error", "Quantity must be positive!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getPrice() <= 0) {
-            redirectAttributes.addAttribute("error", "Price must be positive!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getDate() == null) {
-            redirectAttributes.addAttribute("error", "Date is required!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getType() == null || transaction.getType().trim().isEmpty()) {
-            redirectAttributes.addAttribute("error", "Type is required!");
-            return "redirect:/transactions";
-        }
-        transactionService.addTransaction(transaction); // Add the transaction
-        redirectAttributes.addAttribute("message", "Transaction added successfully!");
-        return "redirect:/transactions"; // Redirect to the list page
-    }
-
-    // Show form to edit an existing transaction
-    @GetMapping("/edit")
-    public String showEditForm(@RequestParam("id") int id, Model model, RedirectAttributes redirectAttributes) {
-        Transaction transaction = transactionService.findTransactionById(id); // Find the transaction by ID
-        if (transaction == null) {
-            redirectAttributes.addAttribute("error", "Transaction not found!");
-            return "redirect:/transactions";
-        }
-        model.addAttribute("transaction", transaction); // Add the transaction to the model
-        return "edit-transaction"; // Return the edit-transaction.html template
-    }
-
-    // Handle form submission to update a transaction
-    @PostMapping("/update")
-    public String updateTransaction(@ModelAttribute Transaction transaction, RedirectAttributes redirectAttributes) {
-        // Validate the transaction
-        if (transaction.getItemName() == null || transaction.getItemName().trim().isEmpty()) {
-            redirectAttributes.addAttribute("error", "Item name is required!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getQuantity() <= 0) {
-            redirectAttributes.addAttribute("error", "Quantity must be positive!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getPrice() <= 0) {
-            redirectAttributes.addAttribute("error", "Price must be positive!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getDate() == null) {
-            redirectAttributes.addAttribute("error", "Date is required!");
-            return "redirect:/transactions";
-        }
-        if (transaction.getType() == null || transaction.getType().trim().isEmpty()) {
-            redirectAttributes.addAttribute("error", "Type is required!");
-            return "redirect:/transactions";
-        }
-        transactionService.updateTransaction(transaction); // Update the transaction
-        redirectAttributes.addAttribute("message", "Transaction updated successfully!");
-        return "redirect:/transactions"; // Redirect to the list page
-    }
-
-    // Delete a transaction
-    @GetMapping("/delete")
-    public String deleteTransaction(@RequestParam("id") int id, RedirectAttributes redirectAttributes) {
-        transactionService.deleteTransaction(id); // Delete the transaction
-        redirectAttributes.addAttribute("message", "Transaction deleted successfully!");
-        return "redirect:/transactions"; // Redirect to the list page
+        logger.info("Accessing listTransactions view");
+        List<Transaction> transactions = transactionService.getAllTransactions();
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("totalRestockValue", transactionService.getTotalRestockValue());
+        model.addAttribute("totalSaleValue", transactionService.getTotalSaleValue());
+        model.addAttribute("message", message);
+        model.addAttribute("error", error);
+        return "transactionindex";
     }
 }
