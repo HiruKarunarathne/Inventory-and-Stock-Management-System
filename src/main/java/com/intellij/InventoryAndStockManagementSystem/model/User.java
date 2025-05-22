@@ -1,23 +1,49 @@
 package com.intellij.InventoryAndStockManagementSystem.model;
 
-import java.io.Serializable;
 
-public class User implements Serializable {
+public class User {
+    private String name;
+    private String phone;
+    private String email;
     private String username;
     private String password;
-    private String role; // e.g., "ADMIN", "STAFF"
+    private String image;
 
-    // Default constructor (required for serialization)
     public User() {}
 
-    // Parameterized constructor
-    public User(String username, String password, String role) {
+    public User(String name, String phone, String email, String username, String password, String image) {
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.image = image;
     }
 
-    // Getters and Setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -34,21 +60,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getImage() {
+        return image;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setImage(String image) {
+        this.image = image;
     }
-
-    // toString() - optional, useful for logging or debugging
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
-
 }
+
