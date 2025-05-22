@@ -2,35 +2,42 @@ package com.intellij.InventoryAndStockManagementSystem.controller;
 
 import com.intellij.InventoryAndStockManagementSystem.model.User;
 import com.intellij.InventoryAndStockManagementSystem.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/user")
+@CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true") // <-- change origin to your frontend URL
 public class UserController {
+
     @Autowired
     private UserService userService;
 
-    //Register user (passing full User object)
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public String register(@RequestBody User user) {
+        boolean success = userService.register(user);
+        return success ? "SUCCESS" : "FAILED";
     }
 
-    //Login user (passing username & password separately from User object)
     @PostMapping("/login")
-    public User loginUser(@RequestBody User user) {
-        return userService.loginUser(user.getUsername(), user.getPassword());
+    public String login(@RequestBody User loginRequest, HttpSession session) {
+        User user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        if (user != null) {
+            session.setAttribute("loggedUser", user);
+            return "SUCCESS";
+        }
+        return "FAILED";
     }
 
-    // Admin role-based access control
-    @GetMapping("/admin/dashboard")
-    public String adminDashboard(@RequestParam String username) {
-        if (userService.hasRole(username, "Admin")) {
-            return "Welcome to Admin Dashboard";
-        } else {
-            return "Access Denied!";
-        }
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "LOGGED_OUT";
+    }
+
+    @GetMapping("/current")
+    public User getCurrentUser(HttpSession session) {
+        return (User) session.getAttribute("loggedUser");
     }
 }
