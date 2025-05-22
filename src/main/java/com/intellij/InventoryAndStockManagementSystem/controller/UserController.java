@@ -2,9 +2,15 @@ package com.intellij.InventoryAndStockManagementSystem.controller;
 
 import com.intellij.InventoryAndStockManagementSystem.model.User;
 import com.intellij.InventoryAndStockManagementSystem.service.UserService;
-import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/user")
@@ -21,23 +27,30 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User loginRequest, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody User loginRequest, HttpServletRequest request) {
+        if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
+            return ResponseEntity.badRequest().body("Missing username or password");
+        }
         User user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
         if (user != null) {
+            HttpSession session = request.getSession();
             session.setAttribute("loggedUser", user);
-            return "SUCCESS";
+            return ResponseEntity.ok("SUCCESS");
         }
-        return "FAILED";
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("FAILED");
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) session.invalidate();
         return "LOGGED_OUT";
     }
 
     @GetMapping("/current")
-    public User getCurrentUser(HttpSession session) {
-        return (User) session.getAttribute("loggedUser");
+    public User getCurrentUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        return session != null ? (User) session.getAttribute("loggedUser") : null;
     }
+
 }
