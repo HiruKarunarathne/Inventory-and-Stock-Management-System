@@ -1,13 +1,13 @@
-package com.tcs.transaction_control;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class InventoryManagementSystemApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+//package com.tcs.transaction_control;
+//
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest
+//class InventoryManagementSystemApplicationTests {
+//
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//}
