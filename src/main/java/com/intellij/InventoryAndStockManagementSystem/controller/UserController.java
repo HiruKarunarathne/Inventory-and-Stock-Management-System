@@ -22,6 +22,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(@RequestBody User user) {
+        user.setRole("Admin"); // <-- Set role as Admin
         boolean success = userService.register(user);
         return success ? "SUCCESS" : "FAILED";
     }

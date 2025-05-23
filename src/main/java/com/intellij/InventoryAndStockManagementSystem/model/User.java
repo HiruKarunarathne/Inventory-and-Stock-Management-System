@@ -7,17 +7,17 @@ public class User {
     private String email;
     private String username;
     private String password;
-    private String image;
+    private String role; // <-- New field added
 
     public User() {}
 
-    public User(String name, String phone, String email, String username, String password, String image) {
+    public User(String name, String phone, String email, String username, String password,String role) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.image = image;
+        this.role = role;
     }
 
     public String getName() {
@@ -60,12 +60,13 @@ public class User {
         this.password = password;
     }
 
-    public String getImage() {
-        return image;
+
+    public String getRole() {
+        return role;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setRole(String role) {
+        this.role = role;
     }
 }
 
