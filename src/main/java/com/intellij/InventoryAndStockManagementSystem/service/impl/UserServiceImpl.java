@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+// Implementation of the UserService interface
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ManageUserService manageUserService;
 
+    // Initializes the user map by loading users from file
     @PostConstruct
     public void init() {
         try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // Registers a new user
     @Override
     public boolean register(User user) {
         if (userMap.containsKey(user.getUsername())) {
@@ -64,6 +67,7 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    // Saves user details to the users.txt file
     private void saveUserToFile(User user) {
         try (FileWriter fw = new FileWriter("users.txt", true)) {
             fw.write(user.getName() + "," + user.getPhone() + "," + user.getEmail() + "," +
@@ -73,17 +77,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // Logs in a user
     @Override
     public User login(String username, String password) {
         User user = userMap.get(username);
         return (user != null && user.getPassword().equals(password)) ? user : null;
     }
 
+    // Finds a user by their username
     @Override
     public User findByUsername(String username) {
         return userMap.get(username);
     }
 
+    // Validates the password format
     private boolean isValidPassword(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*");
     }

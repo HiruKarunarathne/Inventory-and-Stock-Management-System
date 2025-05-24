@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:63342") // <-- CORS fix added here
+// Controller for handling transaction-related requests
 @Controller
 @RequestMapping("/transactions")
 public class TransactionController {
@@ -23,6 +24,7 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    // Test endpoint to check if the controller is working
     @GetMapping("/test")
     @ResponseBody
     public String test() {
@@ -30,6 +32,7 @@ public class TransactionController {
         return "Test endpoint working! The server is running.";
     }
 
+    // Retrieves all transactions as JSON
     @GetMapping(produces = "application/json")
     @ResponseBody
     public List<Transaction> getAllTransactions() {
@@ -37,6 +40,7 @@ public class TransactionController {
         return transactionService.getAllTransactions();
     }
 
+    // Adds a new transaction
     @PostMapping(consumes = "application/json")
     @ResponseBody
     public ResponseEntity<String> addTransaction(@RequestBody Transaction transaction) {
@@ -44,6 +48,7 @@ public class TransactionController {
                 transaction.getName(), transaction.getQuantity(),
                 transaction.getPrice(), transaction.getDate(), transaction.getType());
 
+        // Validate transaction details
         if (transaction.getName() == null || transaction.getName().trim().isEmpty()) {
             logger.warn("Validation failed: Item name is required");
             return ResponseEntity.badRequest().body("Item name is required!");
@@ -70,6 +75,7 @@ public class TransactionController {
         return ResponseEntity.ok("Transaction added successfully!");
     }
 
+    // Displays the list of transactions in a view
     @GetMapping("/view")
     public String listTransactions(Model model,
                                    @RequestParam(value = "message", required = false) String message,

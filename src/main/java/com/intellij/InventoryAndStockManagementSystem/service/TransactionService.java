@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+// Service for handling transaction-related operations
 @Service
 public class TransactionService {
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
@@ -18,10 +19,12 @@ public class TransactionService {
     private final String filePath = "transactions.txt";
     private int currentId = 1;
 
+    // Constructor that loads transactions from file upon initialization
     public TransactionService() {
         loadTransactionsFromFile();
     }
 
+    // Loads transactions from the transactions.txt file
     private void loadTransactionsFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -50,6 +53,7 @@ public class TransactionService {
         }
     }
 
+    // Saves transactions to the transactions.txt file
     private void saveTransactionsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             Stack<Transaction> tempStack = new Stack<>();
@@ -68,6 +72,7 @@ public class TransactionService {
         }
     }
 
+    // Adds a new transaction
     public void addTransaction(Transaction transaction) {
         logger.debug("Adding transaction: id={}, name={}, type={}", transaction.getId(), transaction.getName(), transaction.getType());
         transaction.setId(String.valueOf(currentId++));
@@ -76,6 +81,7 @@ public class TransactionService {
         saveTransactionsToFile();
     }
 
+    // Retrieves all transactions
     public List<Transaction> getAllTransactions() {
         List<Transaction> transactionList = new ArrayList<>(transactions);
         for (Transaction transaction : transactionList) {
@@ -84,13 +90,15 @@ public class TransactionService {
         return transactionList;
     }
 
+    // Calculates the total value of restock transactions
     public double getTotalRestockValue() {
         return transactions.stream()
                 .filter(transaction -> "Restock".equalsIgnoreCase(transaction.getType()))
                 .mapToDouble(Transaction::getPrice)
                 .sum();
     }
-
+        
+    // Calculates the total value of sale transactions
     public double getTotalSaleValue() {
         return transactions.stream()
                 .filter(transaction -> "Sale".equalsIgnoreCase(transaction.getType()))
@@ -98,6 +106,7 @@ public class TransactionService {
                 .sum();
     }
 
+    // Sorts the stack of transactions using merge sort algorithm
     private void mergeSort(Stack<Transaction> stack, int left, int right) {
         if (left < right) {
             int mid = (left + right) / 2;
@@ -107,6 +116,7 @@ public class TransactionService {
         }
     }
 
+    // Merges two sorted sub-stacks
     private void merge(Stack<Transaction> stack, int left, int mid, int right) {
         List<Transaction> temp = new ArrayList<>();
         int i = left, j = mid + 1;

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+// Controller for handling maintenance request-related operations
 @RestController
 @RequestMapping("/maintenance")
 @CrossOrigin(origins = "*")
@@ -17,6 +18,7 @@ public class MaintenanceRequestController {
     @Autowired
     private MaintenanceRequestService service;
 
+    // Adds a new maintenance request
     @PostMapping("/add")
     public ResponseEntity<String> addRequest(@RequestBody MaintenanceRequest req) {
         if (req.getRequestDate() == null) req.setRequestDate(LocalDate.now());
@@ -25,6 +27,7 @@ public class MaintenanceRequestController {
         return ResponseEntity.ok("Maintenance request added successfully with ID: " + req.getRequestId());
     }
 
+    // Retrieves all maintenance requests, optionally sorted by date
     @GetMapping("/all")
     public List<MaintenanceRequest> getAllRequests(@RequestParam(value = "sorted", required = false) Boolean sorted) {
         if (sorted != null && sorted) {
@@ -34,6 +37,7 @@ public class MaintenanceRequestController {
         }
     }
 
+    // Updates an existing maintenance request
     @PutMapping("/update/{requestId}")
     public ResponseEntity<String> updateRequest(@PathVariable int requestId, @RequestBody MaintenanceRequest req) {
         boolean updated = service.updateRequest(requestId, req);
@@ -44,6 +48,7 @@ public class MaintenanceRequestController {
         }
     }
 
+    // Deletes a maintenance request by its ID
     @DeleteMapping("/delete/{requestId}")
     public ResponseEntity<String> deleteRequest(@PathVariable int requestId) {
         boolean deleted = service.deleteRequest(requestId);
