@@ -10,20 +10,21 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+// Controller for handling supplier-related requests
 @Controller
 public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
 
-    // Loads the HTML page
+    // Loads the HTML page for adding a supplier
     @GetMapping("/addSupplier")
     public String viewPage(Model model) {
         model.addAttribute("suppliers", supplierService.getAllSuppliersSorted());
         return "addSupplier";
     }
 
-    // AJAX POST handler for frontend form
+    // Handles AJAX POST request from the frontend form to add a supplier
     @PostMapping("/addSupplier")
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -34,7 +35,7 @@ public class SupplierController {
         return ResponseEntity.ok("Supplier added successfully");
     }
 
-    // Returns JSON list of all suppliers
+    // Returns a JSON list of all suppliers
     @GetMapping("/getSuppliers")
     @ResponseBody
     @CrossOrigin(origins = "*")

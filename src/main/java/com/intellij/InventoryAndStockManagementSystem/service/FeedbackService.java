@@ -6,19 +6,23 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+// Service for handling feedback-related operations
 @Service
 public class FeedbackService {
     private final FileStorageService fileStorageService;
     private static final String FILE_NAME = "feedback.txt";
 
+    // Constructor for FeedbackService, injecting FileStorageService
     public FeedbackService(FileStorageService fileStorageService) {
         this.fileStorageService = fileStorageService;
     }
 
+    // Retrieves all feedback from file
     public List<Feedback> getAllFeedback() {
         return fileStorageService.readFromFile(FILE_NAME, Feedback.class);
     }
 
+    // Creates new feedback and saves it to file
     public Feedback createFeedback(Feedback feedback) {
         List<Feedback> feedbackList = getAllFeedback();
         feedback.setId(UUID.randomUUID().toString());
@@ -27,6 +31,7 @@ public class FeedbackService {
         return feedback;
     }
 
+    // Updates existing feedback by ID and saves it to file
     public Feedback updateFeedback(String id, Feedback feedback) {
         List<Feedback> feedbackList = getAllFeedback();
         Feedback existingFeedback = feedbackList.stream()
@@ -46,6 +51,7 @@ public class FeedbackService {
         return feedback;
     }
 
+    // Deletes feedback by ID from file
     public void deleteFeedback(String id) {
         List<Feedback> feedback = getAllFeedback();
         feedback.removeIf(i -> i.getId().equals(id));

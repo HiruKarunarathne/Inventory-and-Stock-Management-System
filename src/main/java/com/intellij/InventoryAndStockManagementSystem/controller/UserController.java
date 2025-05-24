@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+// Controller for handling user-related requests
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true") // <-- change origin to your frontend URL
@@ -20,12 +21,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // Handles user registration
     @PostMapping("/register")
     public String register(@RequestBody User user) {
+        user.setRole("Admin"); // <-- Set role as Admin
         boolean success = userService.register(user);
         return success ? "SUCCESS" : "FAILED";
     }
 
+    // Handles user login
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User loginRequest, HttpServletRequest request) {
         if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
@@ -40,6 +44,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("FAILED");
     }
 
+    // Handles user logout
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -47,6 +52,7 @@ public class UserController {
         return "LOGGED_OUT";
     }
 
+    // Gets the currently logged-in user
     @GetMapping("/current")
     public User getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

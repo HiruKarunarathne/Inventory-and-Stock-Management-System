@@ -3,7 +3,6 @@ package com.intellij.InventoryAndStockManagementSystem.service;
 import com.intellij.InventoryAndStockManagementSystem.model.MaintenanceRequest;
 import org.springframework.stereotype.Service;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,16 +14,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+// Service for handling maintenance request-related operations
 @Service
 public class MaintenanceRequestService {
     private final Stack<MaintenanceRequest> stack = new Stack<>();
     private final String filename = "maintenance.txt";
 
-
+    // Initializes the service by loading data from file
     public void init() {
         loadFromFile();
     }
 
+    // Loads maintenance requests from the file
     public synchronized void loadFromFile() {
         stack.clear();
         Path path = Paths.get(filename);
@@ -45,6 +46,7 @@ public class MaintenanceRequestService {
         }
     }
 
+    // Saves maintenance requests to the file
     public synchronized void saveToFile() {
         try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(filename))) {
             List<MaintenanceRequest> tempList = new ArrayList<>(stack);
@@ -58,21 +60,25 @@ public class MaintenanceRequestService {
         }
     }
 
+    // Adds a new maintenance request
     public synchronized void addRequest(MaintenanceRequest req) {
         stack.push(req);
         saveToFile();
     }
 
+    // Retrieves all maintenance requests
     public synchronized List<MaintenanceRequest> getAllRequests() {
         return new ArrayList<>(stack);
     }
 
+    // Retrieves all maintenance requests, sorted by date
     public synchronized List<MaintenanceRequest> getAllRequestsSortedByDate() {
         List<MaintenanceRequest> list = new ArrayList<>(stack);
         mergeSort(list, 0, list.size() - 1);
         return list;
     }
 
+    // Sorts the list of maintenance requests using merge sort algorithm
     private void mergeSort(List<MaintenanceRequest> list, int left, int right) {
         if (left < right) {
             int mid = (left + right) / 2;
@@ -82,6 +88,7 @@ public class MaintenanceRequestService {
         }
     }
 
+    // Merges two sorted sub-lists
     private void merge(List<MaintenanceRequest> list, int left, int mid, int right) {
         List<MaintenanceRequest> leftList = new ArrayList<>(list.subList(left, mid + 1));
         List<MaintenanceRequest> rightList = new ArrayList<>(list.subList(mid + 1, right + 1));
@@ -97,6 +104,7 @@ public class MaintenanceRequestService {
         while (j < rightList.size()) list.set(k++, rightList.get(j++));
     }
 
+    // Updates an existing maintenance request
     public synchronized boolean updateRequest(int requestId, MaintenanceRequest updated) {
         Stack<MaintenanceRequest> temp = new Stack<>();
         boolean found = false;
@@ -117,6 +125,7 @@ public class MaintenanceRequestService {
         return found;
     }
 
+    // Deletes a maintenance request by its ID
     public synchronized boolean deleteRequest(int requestId) {
         Stack<MaintenanceRequest> temp = new Stack<>();
         boolean found = false;
@@ -135,6 +144,7 @@ public class MaintenanceRequestService {
         return found;
     }
 
+    // Gets the next available request ID
     public synchronized int getNextRequestId() {
         int maxId = 0;
         for (MaintenanceRequest req : stack) {

@@ -1,0 +1,2 @@
+b02ecfe8-c30e-46ab-8bbb-c29cade49657,Nimna,0714094958,example@gmail.com,Nimna,Admin@123,Admin
+778318dc-97e2-455a-ab55-a83a48dc2b2d,Nihal,0714094959,Nihal@gmail.com,Ashini,Admin@123,Manager

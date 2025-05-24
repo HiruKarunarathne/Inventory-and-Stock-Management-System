@@ -1,7 +1,7 @@
 package com.intellij.InventoryAndStockManagementSystem.service.impl;
 
-import com.intellij.InventoryAndStockManagementSystem.model.User;
 import com.intellij.InventoryAndStockManagementSystem.model.ManageUser;
+import com.intellij.InventoryAndStockManagementSystem.model.User;
 import com.intellij.InventoryAndStockManagementSystem.service.ManageUserService;
 import com.intellij.InventoryAndStockManagementSystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+// Implementation of the UserService interface
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -22,12 +24,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ManageUserService manageUserService;
 
+    // Initializes the user map by loading users from file
     @PostConstruct
     public void init() {
         try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",", 6);
+                String[] parts = line.split(",", 6); // 7 fields now including role
                 if (parts.length == 6) {
                     User user = new User(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
                     userMap.put(user.getUsername(), user);
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // Registers a new user
     @Override
     public boolean register(User user) {
         if (userMap.containsKey(user.getUsername())) {
@@ -50,39 +54,45 @@ public class UserServiceImpl implements UserService {
         saveUserToFile(user);
 
         ManageUser mUser = new ManageUser(
+                UUID.randomUUID().toString(),
                 user.getName(),
                 user.getPhone(),
                 user.getEmail(),
                 user.getUsername(),
                 user.getPassword(),
-                user.getImage()
+                user.getRole()
         );
         manageUserService.saveUser(mUser);
 
         return true;
     }
 
+    // Saves user details to the users.txt file
     private void saveUserToFile(User user) {
         try (FileWriter fw = new FileWriter("users.txt", true)) {
             fw.write(user.getName() + "," + user.getPhone() + "," + user.getEmail() + "," +
-                    user.getUsername() + "," + user.getPassword() + "," + user.getImage() + "\n");
+                    user.getUsername() + "," + user.getPassword() + "," + user.getRole() +"\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // Logs in a user
     @Override
     public User login(String username, String password) {
         User user = userMap.get(username);
         return (user != null && user.getPassword().equals(password)) ? user : null;
     }
 
+    // Finds a user by their username
     @Override
     public User findByUsername(String username) {
         return userMap.get(username);
     }
 
+    // Validates the password format
     private boolean isValidPassword(String password) {
         return password.length() >= 8 && password.matches(".*[A-Z].*");
     }
+
 }

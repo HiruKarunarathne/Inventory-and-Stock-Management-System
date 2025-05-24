@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Service for handling file storage operations
 @Service
 public class FileStorageService {
     @Value("${file.storage.path}")
@@ -16,6 +17,7 @@ public class FileStorageService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // Reads a list of objects from a JSON file
     public <T> List<T> readFromFile(String filename, Class<T> type) {
         try {
             File file = new File(storagePath + filename);
@@ -28,6 +30,7 @@ public class FileStorageService {
         }
     }
 
+    // Writes a list of objects to a JSON file
     public <T> void writeToFile(String filename, List<T> data) {
         try {
             File file = new File(storagePath + filename);
