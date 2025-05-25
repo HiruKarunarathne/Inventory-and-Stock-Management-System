@@ -9,4 +9,6 @@ public interface SupplierService {
     void addSupplier(Supplier supplier);
     // Retrieves all suppliers, sorted
     List<Supplier> getAllSuppliersSorted();
+    boolean updateSupplier(Supplier supplier);
+    boolean deleteSupplierById(String id);
 }

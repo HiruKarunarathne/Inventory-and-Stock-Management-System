@@ -12,4 +12,5 @@ public interface UserService {
     User login(String username, String password);
     // Finds a user by their username
     User findByUsername(String username);
+
 }

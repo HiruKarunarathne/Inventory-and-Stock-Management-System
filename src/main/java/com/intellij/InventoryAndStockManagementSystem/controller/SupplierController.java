@@ -42,4 +42,28 @@ public class SupplierController {
     public List<Supplier> getSuppliers() {
         return supplierService.getAllSuppliersSorted();
     }
+    // ✅ Update Supplier
+    @PostMapping("/updateSupplier")
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<String> updateSupplier(@RequestParam String id,
+                                                 @RequestParam String name,
+                                                 @RequestParam String address) {
+        boolean result = supplierService.updateSupplier(new Supplier(id, name, address));
+        return result
+                ? ResponseEntity.ok("Supplier updated successfully")
+                : ResponseEntity.badRequest().body("Supplier not found");
+    }
+
+    // ✅ Delete Supplier
+    @PostMapping("/deleteSupplier")
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<String> deleteSupplier(@RequestParam String id) {
+        boolean result = supplierService.deleteSupplierById(id);
+        return result
+                ? ResponseEntity.ok("Supplier deleted successfully")
+                : ResponseEntity.badRequest().body("Supplier not found");
+    }
+
 }

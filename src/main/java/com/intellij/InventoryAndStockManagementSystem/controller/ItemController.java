@@ -3,6 +3,8 @@ package com.intellij.InventoryAndStockManagementSystem.controller;
 import com.intellij.InventoryAndStockManagementSystem.model.Item;
 import com.intellij.InventoryAndStockManagementSystem.service.ItemService;
 import com.intellij.InventoryAndStockManagementSystem.util.SortUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +36,19 @@ public class ItemController {
     @GetMapping("/sorted")
     public List<Item> getSortedItems() {
         return SortUtil.mergeSortByExpiryDate(itemService.viewItems());
+    }
+    // Update item
+    @PostMapping("/update")
+    public ResponseEntity<String> updateItem(@RequestBody Item item) {
+        boolean success = itemService.updateItem(item);
+        return success ? ResponseEntity.ok("Updated") : ResponseEntity.badRequest().body("Item not found");
+    }
+
+    // Delete item
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteItem(@RequestParam String id) {
+        boolean success = itemService.deleteItem(id);
+        return success ? ResponseEntity.ok("Deleted") : ResponseEntity.badRequest().body("Item not found");
     }
 
 }
