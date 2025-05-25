@@ -1,71 +1,82 @@
 package com.intellij.InventoryAndStockManagementSystem.stack;
 
 import com.intellij.InventoryAndStockManagementSystem.model.Item;
-import java.util.Stack;
 
 public class ItemStack {
-    private Stack<Item> stack = new Stack<>();
+    private Item[] items;
+    private int top;
+    private final int MAX_SIZE = 100; // Max items allowed
 
+    public ItemStack() {
+        items = new Item[MAX_SIZE];
+        top = -1;
+    }
+
+    // ✅ Push
     public void push(Item item) {
-        stack.push(item);
+        if (top >= MAX_SIZE - 1) {
+            throw new StackOverflowError("Stack is full");
+        }
+        items[++top] = item;
     }
 
+    // ✅ Pop
     public Item pop() {
-        return stack.pop();
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+        return items[top--];
     }
+
+    // ✅ Peek
     public Item peek() {
-        return stack.peek();
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+        return items[top];
     }
 
+    // ✅ isEmpty
     public boolean isEmpty() {
-        return stack.isEmpty();
+        return top == -1;
     }
 
-    public Stack<Item> getAllItems() {
-        return stack;
+    // ✅ Get All Items
+    public Item[] getAllItems() {
+        Item[] currentItems = new Item[top + 1];
+        System.arraycopy(items, 0, currentItems, 0, top + 1);
+        return currentItems;
     }
 
-    // ✅ Update item by ID
+    // ✅ Update Item by ID
     public boolean updateItem(Item updatedItem) {
-        Stack<Item> temp = new Stack<>();
         boolean found = false;
-
-        while (!stack.isEmpty()) {
-            Item item = stack.pop();
-            if (item.getId().equals(updatedItem.getId())) {
-                temp.push(updatedItem);
+        for (int i = 0; i <= top; i++) {
+            if (items[i].getId().equals(updatedItem.getId())) {
+                items[i] = updatedItem;
                 found = true;
-            } else {
-                temp.push(item);
+                break;
             }
         }
-
-        while (!temp.isEmpty()) {
-            stack.push(temp.pop());
-        }
-
         return found;
     }
 
-    // ✅ Delete item by ID
+    // ✅ Delete Item by ID
     public boolean deleteItemById(String id) {
-        Stack<Item> temp = new Stack<>();
         boolean found = false;
+        Item[] newItems = new Item[MAX_SIZE];
+        int newTop = -1;
 
-        while (!stack.isEmpty()) {
-            Item item = stack.pop();
-            if (item.getId().equals(id)) {
+        for (int i = 0; i <= top; i++) {
+            if (!items[i].getId().equals(id)) {
+                newItems[++newTop] = items[i];
+            } else {
                 found = true;
-                continue;
             }
-            temp.push(item);
         }
 
-        while (!temp.isEmpty()) {
-            stack.push(temp.pop());
-        }
-
+        items = newItems;
+        top = newTop;
         return found;
     }
-
 }
